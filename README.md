@@ -38,3 +38,11 @@ Legacy three-layer XLSX/CSV, version 1 JSON and the earlier four-sheet roadmap r
 Data is stored under `chat-gantt.workspace.v2`. On first load the app migrates `chat-gantt.workspace.v1` if version 2 does not exist. The original key remains as a backup. Existing saved work takes precedence over the new initial WBS.
 
 No backend, cross-device sync or Jira/Shortcut API connection. Export to share/back up. No ESLint, Prettier or test framework is configured.
+
+## GitHub Pages
+
+The Vite base path is `/crm-chat-gantt/`. Local development and preview also use this path; follow the URL printed by Vite.
+
+In the repository's **Settings → Pages → Build and deployment**, choose **GitHub Actions** as the source. Commit and push the configuration to `main`. The workflow in `.github/workflows/deploy.yml` installs dependencies with `npm ci`, builds the app and publishes `dist`. It can also be triggered manually through the Actions tab.
+
+After a successful deployment, the app is available at https://vqhungporters.github.io/crm-chat-gantt/ . GitHub Pages serves the app; each browser continues to store its own WBS locally.

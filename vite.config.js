@@ -1,4 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-export default defineConfig({ plugins: [react(), tailwindcss()], server: { port: 5173, strictPort: true } });
+export default defineConfig({
+  base: '/crm-chat-gantt/',
+  plugins: [react(), tailwindcss()],
+  server: { port: 5173, strictPort: true },
+});
