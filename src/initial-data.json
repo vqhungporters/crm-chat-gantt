@@ -1,0 +1,1143 @@
+{
+  "version": 2,
+  "title": "Chat feature schedule",
+  "phases": [
+    {
+      "id": "P0",
+      "name": "Phase 0 — Initial",
+      "start": "2026-08-01",
+      "end": "2026-09-18",
+      "color": "#35bde0"
+    },
+    {
+      "id": "P1",
+      "name": "Phase 1 — Permission Settings and Core Chat",
+      "start": "2026-09-21",
+      "end": "2026-10-30",
+      "color": "#8761ee"
+    },
+    {
+      "id": "P2",
+      "name": "Phase 2 — Reads, Mentions, Bookmarks and Message Navigation",
+      "start": "2026-11-02",
+      "end": "2026-12-31",
+      "color": "#f1bd35"
+    },
+    {
+      "id": "P3",
+      "name": "Phase 3 — Production Deployment and Handover",
+      "start": "2027-01-04",
+      "end": "2027-02-28",
+      "color": "#ea8295"
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "D0.1",
+      "name": "Scope, design and technical foundation",
+      "phaseId": "P0",
+      "startWeek": "2026-08-03",
+      "endWeek": "2026-08-24"
+    },
+    {
+      "id": "D0.2",
+      "name": "Initialized Chat services and HRBC integration",
+      "phaseId": "P0",
+      "startWeek": "2026-08-31",
+      "endWeek": "2026-09-14"
+    },
+    {
+      "id": "D1.1",
+      "name": "Resource permissions and tenant defaults available",
+      "phaseId": "P1",
+      "startWeek": "2026-09-21",
+      "endWeek": "2026-09-28"
+    },
+    {
+      "id": "D1.2",
+      "name": "Users can open and close record chat",
+      "phaseId": "P1",
+      "startWeek": "2026-10-05",
+      "endWeek": "2026-10-05"
+    },
+    {
+      "id": "D1.3",
+      "name": "Users can view messages and participants in the chat panel",
+      "phaseId": "P1",
+      "startWeek": "2026-10-05",
+      "endWeek": "2026-10-19"
+    },
+    {
+      "id": "D1.4",
+      "name": "Users can send and manage their own messages",
+      "phaseId": "P1",
+      "startWeek": "2026-10-05",
+      "endWeek": "2026-10-26"
+    },
+    {
+      "id": "D1.5",
+      "name": "Phase 1 validated and released to the agreed environment",
+      "phaseId": "P1",
+      "startWeek": "2026-10-19",
+      "endWeek": "2026-10-26"
+    },
+    {
+      "id": "D2.1",
+      "name": "Users can track and navigate unread messages",
+      "phaseId": "P2",
+      "startWeek": "2026-11-02",
+      "endWeek": "2026-11-23"
+    },
+    {
+      "id": "D2.2",
+      "name": "Users can access global chat notifications",
+      "phaseId": "P2",
+      "startWeek": "2026-11-02",
+      "endWeek": "2026-11-23"
+    },
+    {
+      "id": "D2.3",
+      "name": "Users can browse and act on mentions and bookmarks",
+      "phaseId": "P2",
+      "startWeek": "2026-11-02",
+      "endWeek": "2026-12-07"
+    },
+    {
+      "id": "D2.4",
+      "name": "Users can mention others in chat messages",
+      "phaseId": "P2",
+      "startWeek": "2026-11-02",
+      "endWeek": "2026-11-23"
+    },
+    {
+      "id": "D2.5",
+      "name": "Users can save and remove message bookmarks",
+      "phaseId": "P2",
+      "startWeek": "2026-11-16",
+      "endWeek": "2026-11-23"
+    },
+    {
+      "id": "D2.6",
+      "name": "Users can share message links and navigate to permitted targets",
+      "phaseId": "P2",
+      "startWeek": "2026-11-30",
+      "endWeek": "2026-12-07"
+    },
+    {
+      "id": "D2.7",
+      "name": "Phase 2 validated with Phase 1 regression and released",
+      "phaseId": "P2",
+      "startWeek": "2026-12-14",
+      "endWeek": "2026-12-28"
+    },
+    {
+      "id": "D3.1",
+      "name": "Raw data export and Domo handover accepted",
+      "phaseId": "P3",
+      "startWeek": "2027-01-04",
+      "endWeek": "2027-02-01"
+    },
+    {
+      "id": "D3.2",
+      "name": "ChatBox ready for production and deployed",
+      "phaseId": "P3",
+      "startWeek": "2027-01-04",
+      "endWeek": "2027-02-01"
+    },
+    {
+      "id": "D3.3",
+      "name": "Final regression, UAT and Phase 3 release accepted",
+      "phaseId": "P3",
+      "startWeek": "2027-02-08",
+      "endWeek": "2027-02-22"
+    }
+  ],
+  "epics": [
+    {
+      "id": "E0.1.1",
+      "name": "Technical onboarding",
+      "deliverableId": "D0.1",
+      "startWeek": "2026-08-03",
+      "endWeek": "2026-08-03"
+    },
+    {
+      "id": "E0.1.2",
+      "name": "Requirements and planning basis",
+      "deliverableId": "D0.1",
+      "startWeek": "2026-08-10",
+      "endWeek": "2026-08-17"
+    },
+    {
+      "id": "E0.1.3",
+      "name": "Architecture and API contracts",
+      "deliverableId": "D0.1",
+      "startWeek": "2026-08-24",
+      "endWeek": "2026-08-24"
+    },
+    {
+      "id": "E0.2.1",
+      "name": "Chat application initialization",
+      "deliverableId": "D0.2",
+      "startWeek": "2026-08-31",
+      "endWeek": "2026-09-07"
+    },
+    {
+      "id": "E0.2.2",
+      "name": "Backend architecture and development configuration",
+      "deliverableId": "D0.2",
+      "startWeek": "2026-09-07",
+      "endWeek": "2026-09-14"
+    },
+    {
+      "id": "E1.1.1",
+      "name": "Permission specification and settings screen",
+      "deliverableId": "D1.1",
+      "startWeek": "2026-09-21",
+      "endWeek": "2026-09-21"
+    },
+    {
+      "id": "E1.1.2",
+      "name": "Permission persistence and tenant defaults",
+      "deliverableId": "D1.1",
+      "startWeek": "2026-09-21",
+      "endWeek": "2026-09-28"
+    },
+    {
+      "id": "E1.2.1",
+      "name": "Record chat entry point",
+      "deliverableId": "D1.2",
+      "startWeek": "2026-10-05",
+      "endWeek": "2026-10-05"
+    },
+    {
+      "id": "E1.3.1",
+      "name": "Panel structure and interaction",
+      "deliverableId": "D1.3",
+      "startWeek": "2026-10-05",
+      "endWeek": "2026-10-12"
+    },
+    {
+      "id": "E1.3.2",
+      "name": "Message history and participant display",
+      "deliverableId": "D1.3",
+      "startWeek": "2026-10-12",
+      "endWeek": "2026-10-19"
+    },
+    {
+      "id": "E1.4.1",
+      "name": "Message composition and sending",
+      "deliverableId": "D1.4",
+      "startWeek": "2026-10-05",
+      "endWeek": "2026-10-19"
+    },
+    {
+      "id": "E1.4.2",
+      "name": "Message editing, deletion and action controls",
+      "deliverableId": "D1.4",
+      "startWeek": "2026-10-19",
+      "endWeek": "2026-10-26"
+    },
+    {
+      "id": "E1.5.1",
+      "name": "Phase 1 validation and release",
+      "deliverableId": "D1.5",
+      "startWeek": "2026-10-19",
+      "endWeek": "2026-10-26"
+    },
+    {
+      "id": "E2.1.1",
+      "name": "Unread state and visibility",
+      "deliverableId": "D2.1",
+      "startWeek": "2026-11-02",
+      "endWeek": "2026-11-09"
+    },
+    {
+      "id": "E2.1.2",
+      "name": "Read-state actions and navigation",
+      "deliverableId": "D2.1",
+      "startWeek": "2026-11-16",
+      "endWeek": "2026-11-23"
+    },
+    {
+      "id": "E2.2.1",
+      "name": "Global chat entry point",
+      "deliverableId": "D2.2",
+      "startWeek": "2026-11-02",
+      "endWeek": "2026-11-23"
+    },
+    {
+      "id": "E2.3.1",
+      "name": "Mentions and bookmarks management view",
+      "deliverableId": "D2.3",
+      "startWeek": "2026-11-02",
+      "endWeek": "2026-11-23"
+    },
+    {
+      "id": "E2.3.2",
+      "name": "Selected-message navigation and list actions",
+      "deliverableId": "D2.3",
+      "startWeek": "2026-11-23",
+      "endWeek": "2026-12-07"
+    },
+    {
+      "id": "E2.4.1",
+      "name": "Mention selection and persistence",
+      "deliverableId": "D2.4",
+      "startWeek": "2026-11-02",
+      "endWeek": "2026-11-09"
+    },
+    {
+      "id": "E2.4.2",
+      "name": "Mention edits and display",
+      "deliverableId": "D2.4",
+      "startWeek": "2026-11-16",
+      "endWeek": "2026-11-23"
+    },
+    {
+      "id": "E2.5.1",
+      "name": "Message bookmark actions",
+      "deliverableId": "D2.5",
+      "startWeek": "2026-11-16",
+      "endWeek": "2026-11-23"
+    },
+    {
+      "id": "E2.6.1",
+      "name": "Message links and target navigation",
+      "deliverableId": "D2.6",
+      "startWeek": "2026-11-30",
+      "endWeek": "2026-12-07"
+    },
+    {
+      "id": "E2.7.1",
+      "name": "Phase 2 integration, acceptance and release",
+      "deliverableId": "D2.7",
+      "startWeek": "2026-12-14",
+      "endWeek": "2026-12-28"
+    },
+    {
+      "id": "E3.1.1",
+      "name": "Raw data export implementation",
+      "deliverableId": "D3.1",
+      "startWeek": "2027-01-04",
+      "endWeek": "2027-02-01"
+    },
+    {
+      "id": "E3.1.2",
+      "name": "Domo handover and acceptance",
+      "deliverableId": "D3.1",
+      "startWeek": "2027-01-04",
+      "endWeek": "2027-02-01"
+    },
+    {
+      "id": "E3.2.1",
+      "name": "Production readiness",
+      "deliverableId": "D3.2",
+      "startWeek": "2027-01-04",
+      "endWeek": "2027-02-01"
+    },
+    {
+      "id": "E3.2.2",
+      "name": "Production deployment",
+      "deliverableId": "D3.2",
+      "startWeek": "2027-01-04",
+      "endWeek": "2027-02-01"
+    },
+    {
+      "id": "E3.3.1",
+      "name": "Full regression and final UAT",
+      "deliverableId": "D3.3",
+      "startWeek": "2027-02-08",
+      "endWeek": "2027-02-22"
+    },
+    {
+      "id": "E3.3.2",
+      "name": "Phase 3 release acceptance and closure",
+      "deliverableId": "D3.3",
+      "startWeek": "2027-02-08",
+      "endWeek": "2027-02-22"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T0.1.1.1",
+      "name": "Set up development environment and study HRBC / HRBC UI / Service Client source code",
+      "epicId": "E0.1.1",
+      "status": "done",
+      "startWeek": "2026-08-03",
+      "endWeek": "2026-08-03",
+      "legacyId": "story-0.1.1"
+    },
+    {
+      "id": "T0.1.2.1",
+      "name": "Confirm requirements and three-phase boundaries",
+      "epicId": "E0.1.2",
+      "status": "done",
+      "startWeek": "2026-08-10",
+      "endWeek": "2026-08-10",
+      "legacyId": "story-0.1.2"
+    },
+    {
+      "id": "T0.1.2.2",
+      "name": "Review Figma and logic flows",
+      "epicId": "E0.1.2",
+      "status": "done",
+      "startWeek": "2026-08-10",
+      "endWeek": "2026-08-10",
+      "legacyId": "story-0.1.3"
+    },
+    {
+      "id": "T0.1.2.3",
+      "name": "Prepare feature breakdown and planning for three phases — WBS, roadmap and Gantt chart",
+      "epicId": "E0.1.2",
+      "status": "done",
+      "startWeek": "2026-08-17",
+      "endWeek": "2026-08-17",
+      "legacyId": "story-0.1.4"
+    },
+    {
+      "id": "T0.1.3.1",
+      "name": "Design Spring Boot proposals",
+      "epicId": "E0.1.3",
+      "status": "done",
+      "startWeek": "2026-08-24",
+      "endWeek": "2026-08-24",
+      "legacyId": "story-0.1.5"
+    },
+    {
+      "id": "T0.1.3.2",
+      "name": "Prepare OpenAPI specifications",
+      "epicId": "E0.1.3",
+      "status": "done",
+      "startWeek": "2026-08-24",
+      "endWeek": "2026-08-24",
+      "legacyId": "story-0.1.6"
+    },
+    {
+      "id": "T0.2.1.1",
+      "name": "Initialize Chat UI",
+      "epicId": "E0.2.1",
+      "status": "done",
+      "startWeek": "2026-08-31",
+      "endWeek": "2026-08-31",
+      "legacyId": "story-0.2.1"
+    },
+    {
+      "id": "T0.2.1.2",
+      "name": "Initialize Chat Public API and Chat API",
+      "epicId": "E0.2.1",
+      "status": "done",
+      "startWeek": "2026-08-31",
+      "endWeek": "2026-08-31",
+      "legacyId": "story-0.2.2"
+    },
+    {
+      "id": "T0.2.1.3",
+      "name": "Integrate Chat UI into HRBC",
+      "epicId": "E0.2.1",
+      "status": "done",
+      "startWeek": "2026-09-07",
+      "endWeek": "2026-09-07",
+      "legacyId": "story-0.2.3"
+    },
+    {
+      "id": "T0.2.2.1",
+      "name": "Refactor backend architecture based on gRPC proposals",
+      "epicId": "E0.2.2",
+      "status": "done",
+      "startWeek": "2026-09-07",
+      "endWeek": "2026-09-07",
+      "legacyId": "story-0.2.4"
+    },
+    {
+      "id": "T0.2.2.2",
+      "name": "Configure Service Client, ESLint and commit hooks",
+      "epicId": "E0.2.2",
+      "status": "done",
+      "startWeek": "2026-09-14",
+      "endWeek": "2026-09-14",
+      "legacyId": "story-0.2.5"
+    },
+    {
+      "id": "T0.2.2.3",
+      "name": "Set up Docker for Chat Public API and Chat API",
+      "epicId": "E0.2.2",
+      "status": "done",
+      "startWeek": "2026-09-14",
+      "endWeek": "2026-09-14",
+      "legacyId": "story-0.2.6"
+    },
+    {
+      "id": "T1.1.1.1",
+      "name": "Prepare Permission DevSpec",
+      "epicId": "E1.1.1",
+      "status": "done",
+      "startWeek": "2026-09-21",
+      "endWeek": "2026-09-21",
+      "legacyId": "story-1.1.1"
+    },
+    {
+      "id": "T1.1.1.2",
+      "name": "Implement permission settings screen in Customize",
+      "epicId": "E1.1.1",
+      "status": "done",
+      "startWeek": "2026-09-21",
+      "endWeek": "2026-09-21",
+      "legacyId": "story-1.1.2"
+    },
+    {
+      "id": "T1.1.2.1",
+      "name": "Retrieve permission settings",
+      "epicId": "E1.1.2",
+      "status": "done",
+      "startWeek": "2026-09-21",
+      "endWeek": "2026-09-21",
+      "legacyId": "story-1.1.3"
+    },
+    {
+      "id": "T1.1.2.2",
+      "name": "Persist ON/OFF settings per resource",
+      "epicId": "E1.1.2",
+      "status": "done",
+      "startWeek": "2026-09-28",
+      "endWeek": "2026-09-28",
+      "legacyId": "story-1.1.4"
+    },
+    {
+      "id": "T1.1.2.3",
+      "name": "Apply defaults to existing tenants",
+      "epicId": "E1.1.2",
+      "status": "done",
+      "startWeek": "2026-09-28",
+      "endWeek": "2026-09-28",
+      "legacyId": "story-1.1.5"
+    },
+    {
+      "id": "T1.1.2.4",
+      "name": "Run permission settings unit tests",
+      "epicId": "E1.1.2",
+      "status": "done",
+      "startWeek": "2026-09-28",
+      "endWeek": "2026-09-28",
+      "legacyId": "story-1.1.6"
+    },
+    {
+      "id": "T1.2.1.1",
+      "name": "Prepare Chat Icon DevSpec",
+      "epicId": "E1.2.1",
+      "status": "planned",
+      "startWeek": "2026-10-05",
+      "endWeek": "2026-10-05",
+      "legacyId": "story-1.2.1"
+    },
+    {
+      "id": "T1.2.1.2",
+      "name": "Display chat icon and toggle chat panel",
+      "epicId": "E1.2.1",
+      "status": "planned",
+      "startWeek": "2026-10-05",
+      "endWeek": "2026-10-05",
+      "legacyId": "story-1.2.2"
+    },
+    {
+      "id": "T1.2.1.3",
+      "name": "Run chat icon unit tests",
+      "epicId": "E1.2.1",
+      "status": "planned",
+      "startWeek": "2026-10-05",
+      "endWeek": "2026-10-05",
+      "legacyId": "story-1.2.3"
+    },
+    {
+      "id": "T1.3.1.1",
+      "name": "Prepare Chat DevSpec",
+      "epicId": "E1.3.1",
+      "status": "planned",
+      "startWeek": "2026-10-05",
+      "endWeek": "2026-10-05",
+      "legacyId": "story-1.3.1"
+    },
+    {
+      "id": "T1.3.1.2",
+      "name": "Implement common chat components",
+      "epicId": "E1.3.1",
+      "status": "planned",
+      "startWeek": "2026-10-05",
+      "endWeek": "2026-10-05",
+      "legacyId": "story-1.3.2"
+    },
+    {
+      "id": "T1.3.1.3",
+      "name": "Implement chat panel resizing",
+      "epicId": "E1.3.1",
+      "status": "planned",
+      "startWeek": "2026-10-12",
+      "endWeek": "2026-10-12",
+      "legacyId": "story-1.3.3"
+    },
+    {
+      "id": "T1.3.2.1",
+      "name": "Display chronological messages and history with loading, empty and error states",
+      "epicId": "E1.3.2",
+      "status": "planned",
+      "startWeek": "2026-10-12",
+      "endWeek": "2026-10-12",
+      "legacyId": "story-1.3.4"
+    },
+    {
+      "id": "T1.3.2.2",
+      "name": "Display user avatar and name in the chat panel",
+      "epicId": "E1.3.2",
+      "status": "planned",
+      "startWeek": "2026-10-12",
+      "endWeek": "2026-10-12",
+      "legacyId": "story-1.3.5"
+    },
+    {
+      "id": "T1.3.2.3",
+      "name": "Run chat panel unit tests",
+      "epicId": "E1.3.2",
+      "status": "planned",
+      "startWeek": "2026-10-19",
+      "endWeek": "2026-10-19",
+      "legacyId": "story-1.3.6"
+    },
+    {
+      "id": "T1.4.1.1",
+      "name": "Implement rich-text editor component",
+      "epicId": "E1.4.1",
+      "status": "planned",
+      "startWeek": "2026-10-05",
+      "endWeek": "2026-10-05",
+      "legacyId": "story-1.4.1"
+    },
+    {
+      "id": "T1.4.1.2",
+      "name": "Send plain-text messages",
+      "epicId": "E1.4.1",
+      "status": "planned",
+      "startWeek": "2026-10-12",
+      "endWeek": "2026-10-12",
+      "legacyId": "story-1.4.2"
+    },
+    {
+      "id": "T1.4.1.3",
+      "name": "Send image and file messages",
+      "epicId": "E1.4.1",
+      "status": "planned",
+      "startWeek": "2026-10-19",
+      "endWeek": "2026-10-19",
+      "legacyId": "story-1.4.3"
+    },
+    {
+      "id": "T1.4.1.4",
+      "name": "Automatically link URLs in message text",
+      "epicId": "E1.4.1",
+      "status": "planned",
+      "startWeek": "2026-10-12",
+      "endWeek": "2026-10-12",
+      "legacyId": "story-1.4.4"
+    },
+    {
+      "id": "T1.4.2.1",
+      "name": "Edit own messages and retain edit history",
+      "epicId": "E1.4.2",
+      "status": "planned",
+      "startWeek": "2026-10-19",
+      "endWeek": "2026-10-19",
+      "legacyId": "story-1.4.5"
+    },
+    {
+      "id": "T1.4.2.2",
+      "name": "Delete messages with confirmation",
+      "epicId": "E1.4.2",
+      "status": "planned",
+      "startWeek": "2026-10-19",
+      "endWeek": "2026-10-19",
+      "legacyId": "story-1.4.6"
+    },
+    {
+      "id": "T1.4.2.3",
+      "name": "Handle action permissions and errors",
+      "epicId": "E1.4.2",
+      "status": "planned",
+      "startWeek": "2026-10-19",
+      "endWeek": "2026-10-19",
+      "legacyId": "story-1.4.7"
+    },
+    {
+      "id": "T1.4.2.4",
+      "name": "Run chat action unit tests",
+      "epicId": "E1.4.2",
+      "status": "planned",
+      "startWeek": "2026-10-26",
+      "endWeek": "2026-10-26",
+      "legacyId": "story-1.4.8"
+    },
+    {
+      "id": "T1.5.1.1",
+      "name": "Test the full Phase 1 flow",
+      "epicId": "E1.5.1",
+      "status": "planned",
+      "startWeek": "2026-10-26",
+      "endWeek": "2026-10-26",
+      "legacyId": "story-1.5.1"
+    },
+    {
+      "id": "T1.5.1.2",
+      "name": "Prepare Phase 1 test cases",
+      "epicId": "E1.5.1",
+      "status": "planned",
+      "startWeek": "2026-10-19",
+      "endWeek": "2026-10-19",
+      "legacyId": "story-1.5.2"
+    },
+    {
+      "id": "T1.5.1.3",
+      "name": "Release Phase 1 and run smoke tests",
+      "epicId": "E1.5.1",
+      "status": "planned",
+      "startWeek": "2026-10-26",
+      "endWeek": "2026-10-26",
+      "legacyId": "story-1.5.3"
+    },
+    {
+      "id": "T2.1.1.1",
+      "name": "Prepare Unread / Read DevSpec",
+      "epicId": "E2.1.1",
+      "status": "planned",
+      "startWeek": "2026-11-02",
+      "endWeek": "2026-11-02",
+      "legacyId": "story-2.1.1"
+    },
+    {
+      "id": "T2.1.1.2",
+      "name": "Display unread badges on chat icons",
+      "epicId": "E2.1.1",
+      "status": "planned",
+      "startWeek": "2026-11-09",
+      "endWeek": "2026-11-09",
+      "legacyId": "story-2.1.2"
+    },
+    {
+      "id": "T2.1.1.3",
+      "name": "Implement chat panel read receipts",
+      "epicId": "E2.1.1",
+      "status": "planned",
+      "startWeek": "2026-11-09",
+      "endWeek": "2026-11-09",
+      "legacyId": "story-2.1.3"
+    },
+    {
+      "id": "T2.1.2.1",
+      "name": "Mark a message unread",
+      "epicId": "E2.1.2",
+      "status": "planned",
+      "startWeek": "2026-11-16",
+      "endWeek": "2026-11-16",
+      "legacyId": "story-2.1.4"
+    },
+    {
+      "id": "T2.1.2.2",
+      "name": "Mark a message read again",
+      "epicId": "E2.1.2",
+      "status": "planned",
+      "startWeek": "2026-11-16",
+      "endWeek": "2026-11-16",
+      "legacyId": "story-2.1.5"
+    },
+    {
+      "id": "T2.1.2.3",
+      "name": "Navigate to the furthest unread message",
+      "epicId": "E2.1.2",
+      "status": "planned",
+      "startWeek": "2026-11-16",
+      "endWeek": "2026-11-16",
+      "legacyId": "story-2.1.6"
+    },
+    {
+      "id": "T2.1.2.4",
+      "name": "Run unread / read unit tests",
+      "epicId": "E2.1.2",
+      "status": "planned",
+      "startWeek": "2026-11-23",
+      "endWeek": "2026-11-23",
+      "legacyId": "story-2.1.7"
+    },
+    {
+      "id": "T2.2.1.1",
+      "name": "Display global chat icon",
+      "epicId": "E2.2.1",
+      "status": "planned",
+      "startWeek": "2026-11-02",
+      "endWeek": "2026-11-02",
+      "legacyId": "story-2.2.1"
+    },
+    {
+      "id": "T2.2.1.2",
+      "name": "Display notification badges on global chat icon",
+      "epicId": "E2.2.1",
+      "status": "planned",
+      "startWeek": "2026-11-23",
+      "endWeek": "2026-11-23",
+      "legacyId": "story-2.2.2"
+    },
+    {
+      "id": "T2.3.1.1",
+      "name": "Prepare Mentions / Bookmarks DevSpec",
+      "epicId": "E2.3.1",
+      "status": "planned",
+      "startWeek": "2026-11-02",
+      "endWeek": "2026-11-02",
+      "legacyId": "story-2.3.1"
+    },
+    {
+      "id": "T2.3.1.2",
+      "name": "Display Mentions and Bookmarks tabs",
+      "epicId": "E2.3.1",
+      "status": "planned",
+      "startWeek": "2026-11-09",
+      "endWeek": "2026-11-09",
+      "legacyId": "story-2.3.2"
+    },
+    {
+      "id": "T2.3.1.3",
+      "name": "Filter All / Unread",
+      "epicId": "E2.3.1",
+      "status": "planned",
+      "startWeek": "2026-11-23",
+      "endWeek": "2026-11-23",
+      "legacyId": "story-2.3.3"
+    },
+    {
+      "id": "T2.3.1.4",
+      "name": "Display record detail panel and chat panel",
+      "epicId": "E2.3.1",
+      "status": "planned",
+      "startWeek": "2026-11-16",
+      "endWeek": "2026-11-16",
+      "legacyId": "story-2.3.4"
+    },
+    {
+      "id": "T2.3.2.1",
+      "name": "Mark read when the target message is displayed",
+      "epicId": "E2.3.2",
+      "status": "planned",
+      "startWeek": "2026-11-23",
+      "endWeek": "2026-11-23",
+      "legacyId": "story-2.3.5"
+    },
+    {
+      "id": "T2.3.2.2",
+      "name": "Auto-scroll to the selected mention or bookmark message",
+      "epicId": "E2.3.2",
+      "status": "planned",
+      "startWeek": "2026-11-30",
+      "endWeek": "2026-11-30",
+      "legacyId": "story-2.3.6"
+    },
+    {
+      "id": "T2.3.2.3",
+      "name": "Unbookmark directly from the list",
+      "epicId": "E2.3.2",
+      "status": "planned",
+      "startWeek": "2026-11-30",
+      "endWeek": "2026-11-30",
+      "legacyId": "story-2.3.7"
+    },
+    {
+      "id": "T2.3.2.4",
+      "name": "Run management-page unit tests",
+      "epicId": "E2.3.2",
+      "status": "planned",
+      "startWeek": "2026-12-07",
+      "endWeek": "2026-12-07",
+      "legacyId": "story-2.3.8"
+    },
+    {
+      "id": "T2.4.1.1",
+      "name": "Load recommended mention users with search",
+      "epicId": "E2.4.1",
+      "status": "planned",
+      "startWeek": "2026-11-02",
+      "endWeek": "2026-11-02",
+      "legacyId": "story-2.4.1"
+    },
+    {
+      "id": "T2.4.1.2",
+      "name": "Store mentions",
+      "epicId": "E2.4.1",
+      "status": "planned",
+      "startWeek": "2026-11-09",
+      "endWeek": "2026-11-09",
+      "legacyId": "story-2.4.2"
+    },
+    {
+      "id": "T2.4.2.1",
+      "name": "Handle mentions added or removed during editing",
+      "epicId": "E2.4.2",
+      "status": "planned",
+      "startWeek": "2026-11-16",
+      "endWeek": "2026-11-16",
+      "legacyId": "story-2.4.3"
+    },
+    {
+      "id": "T2.4.2.2",
+      "name": "Highlight self-mentions automatically",
+      "epicId": "E2.4.2",
+      "status": "planned",
+      "startWeek": "2026-11-16",
+      "endWeek": "2026-11-16",
+      "legacyId": "story-2.4.4"
+    },
+    {
+      "id": "T2.4.2.3",
+      "name": "Run mention unit tests",
+      "epicId": "E2.4.2",
+      "status": "planned",
+      "startWeek": "2026-11-23",
+      "endWeek": "2026-11-23",
+      "legacyId": "story-2.4.5"
+    },
+    {
+      "id": "T2.5.1.1",
+      "name": "Bookmark and unbookmark a message",
+      "epicId": "E2.5.1",
+      "status": "planned",
+      "startWeek": "2026-11-16",
+      "endWeek": "2026-11-16",
+      "legacyId": "story-2.5.1"
+    },
+    {
+      "id": "T2.5.1.2",
+      "name": "Run bookmark unit tests",
+      "epicId": "E2.5.1",
+      "status": "planned",
+      "startWeek": "2026-11-23",
+      "endWeek": "2026-11-23",
+      "legacyId": "story-2.5.2"
+    },
+    {
+      "id": "T2.6.1.1",
+      "name": "Generate a share link for a message",
+      "epicId": "E2.6.1",
+      "status": "planned",
+      "startWeek": "2026-11-30",
+      "endWeek": "2026-11-30",
+      "legacyId": "story-2.6.1"
+    },
+    {
+      "id": "T2.6.1.2",
+      "name": "Load the target message and scroll / highlight it",
+      "epicId": "E2.6.1",
+      "status": "planned",
+      "startWeek": "2026-11-30",
+      "endWeek": "2026-11-30",
+      "legacyId": "story-2.6.2"
+    },
+    {
+      "id": "T2.6.1.3",
+      "name": "Handle unauthorized, missing-target and OFF-setting link errors",
+      "epicId": "E2.6.1",
+      "status": "planned",
+      "startWeek": "2026-12-07",
+      "endWeek": "2026-12-07",
+      "legacyId": "story-2.6.3"
+    },
+    {
+      "id": "T2.6.1.4",
+      "name": "Run message-link unit tests",
+      "epicId": "E2.6.1",
+      "status": "planned",
+      "startWeek": "2026-12-07",
+      "endWeek": "2026-12-07",
+      "legacyId": "story-2.6.4"
+    },
+    {
+      "id": "T2.7.1.1",
+      "name": "Test Phase 2 integration and Phase 1 regression",
+      "epicId": "E2.7.1",
+      "status": "planned",
+      "startWeek": "2026-12-21",
+      "endWeek": "2026-12-21",
+      "legacyId": "story-2.7.1"
+    },
+    {
+      "id": "T2.7.1.2",
+      "name": "Prepare Phase 2 test cases",
+      "epicId": "E2.7.1",
+      "status": "planned",
+      "startWeek": "2026-12-14",
+      "endWeek": "2026-12-14",
+      "legacyId": "story-2.7.2"
+    },
+    {
+      "id": "T2.7.1.3",
+      "name": "Release Phase 2 and run smoke tests",
+      "epicId": "E2.7.1",
+      "status": "planned",
+      "startWeek": "2026-12-28",
+      "endWeek": "2026-12-28",
+      "legacyId": "story-2.7.3"
+    },
+    {
+      "id": "T3.1.1.1",
+      "name": "Confirm export fields, format and delivery method",
+      "epicId": "E3.1.1",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.1.1.2",
+      "name": "Implement raw data export",
+      "epicId": "E3.1.1",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.1.1.3",
+      "name": "Validate exported data completeness and accuracy",
+      "epicId": "E3.1.1",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.1.2.1",
+      "name": "Prepare data mapping and export documentation",
+      "epicId": "E3.1.2",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.1.2.2",
+      "name": "Hand over sample data and export instructions to the Domo team",
+      "epicId": "E3.1.2",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.1.2.3",
+      "name": "Verify Domo ingestion and obtain handover acceptance",
+      "epicId": "E3.1.2",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.2.1.1",
+      "name": "Confirm production configuration and service dependencies",
+      "epicId": "E3.2.1",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.2.1.2",
+      "name": "Verify database migrations and tenant settings",
+      "epicId": "E3.2.1",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.2.1.3",
+      "name": "Verify monitoring, logging and operational alerts",
+      "epicId": "E3.2.1",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.2.1.4",
+      "name": "Prepare deployment and rollback procedures",
+      "epicId": "E3.2.1",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.2.2.1",
+      "name": "Deploy Chat services and UI to production",
+      "epicId": "E3.2.2",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.2.2.2",
+      "name": "Enable the feature according to the agreed rollout plan",
+      "epicId": "E3.2.2",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.2.2.3",
+      "name": "Run production smoke tests and monitor service health",
+      "epicId": "E3.2.2",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.3.1.1",
+      "name": "Prepare full regression and final UAT test cases",
+      "epicId": "E3.3.1",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.3.1.2",
+      "name": "Run regression across all phases",
+      "epicId": "E3.3.1",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.3.1.3",
+      "name": "Conduct final UAT with stakeholders",
+      "epicId": "E3.3.1",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.3.1.4",
+      "name": "Resolve release-blocking defects and verify fixes",
+      "epicId": "E3.3.1",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.3.2.1",
+      "name": "Obtain final UAT and release sign-off",
+      "epicId": "E3.3.2",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.3.2.2",
+      "name": "Publish release notes and complete operational handover",
+      "epicId": "E3.3.2",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    },
+    {
+      "id": "T3.3.2.3",
+      "name": "Confirm Phase 3 release acceptance and close remaining work",
+      "epicId": "E3.3.2",
+      "status": "planned",
+      "startWeek": null,
+      "endWeek": null
+    }
+  ]
+}
