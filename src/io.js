@@ -1,4 +1,4 @@
-import { COLORS, STATUSES, iso, monday, sprintWeeks, validateDocument, itemStats, migrateDocument } from './model.js';
+import { COLORS, STATUSES, iso, monday, sprintWeeks, validateDocument, itemStats, migrateDocument, taskDateRange, taskSchedule } from './model.js';
 export const COLUMNS = ['Layer', 'Name', 'ID', 'Phase', 'Deliverable', 'Epic', 'Start Date', 'End Date', 'Start Sprint', 'End Sprint', 'Status', 'Color'];
 const status = value => {
   const s = String(value ?? '').trim().toLowerCase().replace(/[ -]/g, '_') || 'planned';
@@ -68,7 +68,14 @@ export function rowsToDocument(rows) {
     const d = resolve(doc.deliverables.filter(x => x.phaseId === p.id), get(r.row, 'Deliverable'), 'Deliverable', r.number);
     if (layer === 3) { doc.epics.push({ ...base, deliverableId: d.id }); continue; }
     const e = resolve(doc.epics.filter(x => x.deliverableId === d.id), get(r.row, 'Epic'), 'Epic', r.number);
-    doc.tasks.push({ ...base, epicId: e.id, status: status(get(r.row, 'Status')) });
+    const task = { ...base, epicId: e.id, status: status(get(r.row, 'Status')) };
+    const start = text(get(r.row, 'Start Date')), end = text(get(r.row, 'End Date'));
+    if (start || end) {
+      const schedule = taskSchedule(doc, task, start, end);
+      if (base.startWeek && (base.startWeek !== schedule.startWeek || base.endWeek !== schedule.endWeek)) throw new Error(`Row ${r.number}: task dates and sprint range disagree.`);
+      Object.assign(task, schedule);
+    }
+    doc.tasks.push(task);
   }
   return validateDocument(doc);
 }
@@ -135,6 +142,7 @@ export async function readImport(file) {
     const doc = migrateDocument(JSON.parse(await file.text()));
     if (Array.isArray(doc?.tasks)) doc.tasks = doc.tasks.map(t => ({ ...t, status: status(t.status) }));
     if (Array.isArray(doc?.phases)) doc.phases = doc.phases.map((p, i) => ({ ...p, color: p.color || COLORS[i % COLORS.length] }));
+    if (Array.isArray(doc?.tasks)) doc.tasks = doc.tasks.map(t => (t.start || t.end) && !t.startWeek && !t.endWeek ? { ...t, ...taskSchedule(doc, t, t.start, t.end) } : t);
     return validateDocument(doc);
   }
   if (ext === 'csv') return rowsToDocument(parseCSV(await file.text()));
@@ -176,7 +184,10 @@ export function exportRows(doc) {
       rows.push([2, d.name, d.id, p.id, '', '', '', '', ...schedule(d), itemStats(doc, 'deliverable', d).status, '']);
       for (const e of doc.epics.filter(e => e.deliverableId === d.id)) {
         rows.push([3, e.name, e.id, p.id, d.id, '', '', '', ...schedule(e), itemStats(doc, 'epic', e).status, '']);
-        for (const t of doc.tasks.filter(t => t.epicId === e.id)) rows.push([4, t.name, t.id, p.id, d.id, e.id, '', '', ...schedule(t), t.status, '']);
+        for (const t of doc.tasks.filter(t => t.epicId === e.id)) {
+          const dates = taskDateRange(doc, t);
+          rows.push([4, t.name, t.id, p.id, d.id, e.id, dates?.start || '', dates?.end || '', ...schedule(t), t.status, '']);
+        }
       }
     }
   }
@@ -203,11 +214,12 @@ export async function downloadWorkbook(doc, template = false) {
     ['1 - Phase', 'Name, Start Date, End Date', 'ID, Color'],
     ['2 - Deliverable', 'Name, Phase', 'Start Sprint, End Sprint, ID'],
     ['3 - Epic', 'Name, Phase, Deliverable', 'Start Sprint, End Sprint, ID'],
-    ['4 - Task', 'Name, Phase, Deliverable, Epic', 'Start Sprint, End Sprint, Status, ID'],
+    ['4 - Task', 'Name, Phase, Deliverable, Epic', 'Start Date, End Date, Start Sprint, End Sprint, Status, ID'],
     ['Dates', 'Use YYYY-MM-DD. Phase dates must include a weekday.', ''],
     ['Parents', 'Phase, Deliverable and Epic can refer to a unique name or an ID. IDs resolve duplicate names.', ''],
     ['Status', 'Blank means planned. Values: planned, in_progress, done, canceled.', ''],
     ['Schedule', 'Blank sprint fields mean unscheduled. If supplied, each sprint range must fit its immediate parent range.', ''],
+    ['Task dates', 'Optional paired working-day dates inside the epic and phase. Dates derive sprint numbers. When both are supplied they must agree. Sprint-only tasks keep their full sprint range.', ''],
     ['Sprint numbers', 'Derived from the entire phase timeline. Monday-Friday; weekends are excluded.', ''],
     ['Completion', 'Parent progress is computed from descendant tasks. All non-canceled tasks must be Done; empty parents stay Planned.', ''],
     ['Round trip', 'Exported IDs and parent references preserve hierarchy and schedules on re-import.', '']

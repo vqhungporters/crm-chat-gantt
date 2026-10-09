@@ -99,3 +99,5 @@ h1 { @apply m-0 font-semibold; font-size: clamp(24px, 2.2vw, 32px); letter-spaci
 .layer-4 .drag-handle { left: 45px; }
 .gantt-bar.deliverable { height: 27px; top: 13px; background: color-mix(in srgb, var(--phase-color) 65%, white); border: 1px solid var(--phase-color); }
 .layer-3 .task-name { font-weight: 500; }
+.gantt-bar.task .bar-handle { width: min(7px, 25%); }
+.gantt-bar.task .bar-handle::after { left: calc(50% - 1px); }

@@ -11,6 +11,7 @@ Run `npm install` and `npm run dev`, then open http://localhost:5173. Build with
 - Phase dates generate the global Monday–Friday sprint calendar. Each child's sprint range must fit its immediate parent. Blank sprint fields mean Unscheduled.
 - Drag a deliverable onto a phase, an epic onto a deliverable, or a task onto an epic. Descendants follow. Schedules shift to fit while preserving durations and relative offsets. Moves into unscheduled/shorter destinations are rejected when they cannot fit.
 - Move bars to shift their sprint allocation or drag edges to resize. Moving parents moves every scheduled descendant. Resizing cannot exclude descendants.
+- Layer 4 tasks have Start date and End date alongside From sprint and To sprint. Selecting dates derives the sprint range; selecting sprints initializes the corresponding working-day range, which can then be shortened with dates. Dragging or resizing a task snaps to individual working days, skips weekends and updates both dates and sprints. Parent bars continue to snap to sprints.
 - Task statuses: Planned, In progress, Done, Canceled. All three parent levels calculate progress from descendant tasks. Canceled tasks are excluded. All active tasks must be Done; empty parents stay Planned; parents with only canceled tasks are Canceled.
 - Undo/redo covers hierarchy, scheduling, editing, deletion, status changes and imports.
 
@@ -25,9 +26,11 @@ Column order: `Layer, Name, ID, Phase, Deliverable, Epic, Start Date, End Date, 
 | 1 — Phase | Name, Start Date, End Date | ID, Color |
 | 2 — Deliverable | Name, Phase | ID, Start Sprint, End Sprint |
 | 3 — Epic | Name, Phase, Deliverable | ID, Start Sprint, End Sprint |
-| 4 — Task | Name, Phase, Deliverable, Epic | ID, Start Sprint, End Sprint, Status |
+| 4 — Task | Name, Phase, Deliverable, Epic | ID, Start Date, End Date, Start Sprint, End Sprint, Status |
 
 Use YYYY-MM-DD. Parents can use IDs or unique names within the selected hierarchy. Blank task status becomes Planned; parent statuses are calculated. Schedule each parent before scheduling children. Export preserves IDs, ancestors, sprint ranges and statuses, and includes Sprint Calendar. Import matches headers by name, independent of column order.
+
+Task dates are optional as a pair. Both endpoints must be weekdays inside the epic and phase schedule. Dates alone derive the sprint range; if dates and sprints are both supplied, they must agree. Existing sprint-only tasks keep their prior full-sprint allocation, clipped to the phase's working dates. Export writes effective task dates to the existing Start Date and End Date columns.
 
 JSON uses `version: 2` and arrays `phases`, `deliverables`, `epics`, `tasks`. Deliverables have `phaseId`, epics have `deliverableId`, and tasks have `epicId`.
 

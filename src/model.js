@@ -61,6 +61,48 @@ export function sprintWeeks(phases) {
 }
 export function phaseWeeks(phase, weeks) { return weeks.filter(w => w.start <= phase.end && w.end >= phase.start); }
 export function rangeWeeks(item, weeks) { return item.startWeek && item.endWeek ? weeks.filter(w => w.start >= item.startWeek && w.start <= item.endWeek) : []; }
+export function allowedTaskDays(doc, item) {
+  let phase = parentOf(doc, 'task', item), type = 'epic';
+  while (phase && type !== 'phase') { phase = parentOf(doc, type, phase); type = TYPES[TYPES.indexOf(type) - 1]; }
+  return allowedWeeks(doc, 'task', item).flatMap(w => Array.from({ length: 5 }, (_, i) => addDays(w.start, i)))
+    .filter(d => phase && d >= phase.start && d <= phase.end);
+}
+export function taskDateRange(doc, item) {
+  if (item.start || item.end) return { start: item.start, end: item.end };
+  if (!item.startWeek || !item.endWeek) return null;
+  const days = allowedTaskDays(doc, item).filter(d => d >= item.startWeek && d <= addDays(item.endWeek, 4));
+  return days.length ? { start: days[0], end: days.at(-1) } : null;
+}
+export function taskSchedule(doc, item, start, end) {
+  if (!start && !end) return { start: null, end: null, startWeek: null, endWeek: null };
+  const days = allowedTaskDays(doc, item);
+  if (!validDate(start) || !validDate(end) || start > end || !days.includes(start) || !days.includes(end)) throw new Error('Task dates must be working days inside its epic and phase schedule.');
+  const weeks = sprintWeeks(doc.phases), weekOf = d => weeks.find(w => d >= w.start && d <= w.end)?.start;
+  return { start, end, startWeek: weekOf(start), endWeek: weekOf(end) };
+}
+export function taskSprintSchedule(doc, item, startWeek, endWeek) {
+  if (!startWeek && !endWeek) return taskSchedule(doc, item, null, null);
+  validateRange({ startWeek, endWeek }, allowedWeeks(doc, 'task', item), item.name);
+  const days = allowedTaskDays(doc, item).filter(d => d >= startWeek && d <= addDays(endWeek, 4));
+  return taskSchedule(doc, item, days[0], days.at(-1));
+}
+export function changeTaskDates(doc, id, start, end) {
+  const next = structuredClone(doc), item = next.tasks.find(t => t.id === id);
+  if (!item) throw new Error('Task no longer exists.');
+  next.tasks = next.tasks.map(t => t.id === id ? { ...t, ...taskSchedule(next, item, start, end) } : t);
+  return validateDocument(next);
+}
+// The chart omits weekends, so drag offsets operate on this business-day list.
+export function dragTaskSchedule(doc, item, mode, delta) {
+  const days = allowedTaskDays(doc, item), range = taskDateRange(doc, item);
+  if (!range) throw new Error('Schedule the task before dragging.');
+  let a = days.indexOf(range.start), b = days.indexOf(range.end);
+  if (a < 0 || b < 0) throw new Error('Task dates are outside the parent schedule.');
+  if (mode === 'move') { delta = Math.max(-a, Math.min(days.length - 1 - b, delta)); a += delta; b += delta; }
+  else if (mode === 'start') a = Math.max(0, Math.min(b, a + delta));
+  else b = Math.min(days.length - 1, Math.max(a, b + delta));
+  return taskSchedule(doc, item, days[a], days[b]);
+}
 export function rollup(stories) {
   if (!stories.length) return { status: 'planned', progress: 0, done: 0, total: 0, canceled: 0 };
   const active = stories.filter(s => s.status !== 'canceled');
@@ -97,6 +139,10 @@ export function validateDocument(doc) {
     if (!parentOf(doc, type, item)) throw new Error(`Missing parent ${TITLES[TYPES[TYPES.indexOf(type) - 1]].toLowerCase()} for “${item.name}”.`);
     if (type === 'task' && !STATUSES.includes(item.status)) throw new Error(`Unknown status on “${item.name}”.`);
     validateRange(item, allowedWeeks(doc, type, item, weeks), item.name);
+    if (type === 'task' && (item.start || item.end)) {
+      const schedule = taskSchedule(doc, item, item.start, item.end);
+      if (schedule.startWeek !== item.startWeek || schedule.endWeek !== item.endWeek) throw new Error(`Task dates and sprint range disagree for “${item.name}”.`);
+    }
   }
   return doc;
 }
@@ -104,7 +150,11 @@ export function validateRange(item, allowed, name) {
   if (!item.startWeek && !item.endWeek) return;
   if (!item.startWeek || !item.endWeek || item.startWeek > item.endWeek || !allowed.some(w => w.start === item.startWeek) || !allowed.some(w => w.start === item.endWeek)) throw new Error(`The sprint range for “${name}” must stay within its parent’s schedule.`);
 }
-function shift(item, delta) { return item.startWeek ? { ...item, startWeek: addDays(item.startWeek, delta * 7), endWeek: addDays(item.endWeek, delta * 7) } : item; }
+function shift(item, delta) { return item.startWeek ? { ...item, startWeek: addDays(item.startWeek, delta * 7), endWeek: addDays(item.endWeek, delta * 7), ...(item.start && item.end ? { start: addDays(item.start, delta * 7), end: addDays(item.end, delta * 7) } : {}) } : item; }
+function shiftChild(doc, child, delta) {
+  const dates = child.type === 'task' ? taskDateRange(doc, child.item) : null;
+  return shift(dates ? { ...child.item, ...dates } : child.item, delta);
+}
 function fitRange(item, allowed) {
   if (!item.startWeek) return { ...item };
   if (!allowed.length) throw new Error('Schedule the destination parent before moving a scheduled item.');
@@ -121,19 +171,31 @@ export function reparent(doc, type, id, parentId) {
   if (!item) throw new Error('Item no longer exists.');
   const moved = { ...item, [PARENT_KEYS[type]]: parentId };
   if (!parentOf(next, type, moved)) throw new Error('Destination parent no longer exists.');
-  const fitted = fitRange(moved, allowedWeeks(next, type, moved, weeks));
+  let fitted;
+  if (type === 'task' && item.startWeek) {
+    const range = taskDateRange(doc, item), days = allowedTaskDays(next, moved), duration = workDays(range.start, range.end);
+    if (duration > days.length) throw new Error('The task is longer than the destination working-day range.');
+    let index = days.findIndex(d => d >= range.start);
+    if (index < 0) index = days.length - duration;
+    index = Math.min(index, days.length - duration);
+    fitted = { ...moved, ...taskSchedule(next, moved, days[index], days[index + duration - 1]) };
+  } else fitted = fitRange(moved, allowedWeeks(next, type, moved, weeks));
   const delta = item.startWeek ? Math.round((date(fitted.startWeek) - date(item.startWeek)) / (7 * DAY)) : 0;
-  for (const child of descendants(next, type, id)) next[COLLECTIONS[child.type]] = next[COLLECTIONS[child.type]].map(x => x.id === child.item.id ? shift(x, delta) : x);
+  for (const child of descendants(doc, type, id)) next[COLLECTIONS[child.type]] = next[COLLECTIONS[child.type]].map(x => x.id === child.item.id ? shiftChild(doc, child, delta) : x);
   next[key] = next[key].map(x => x.id === id ? fitted : x);
   return validateDocument(next);
 }
 export function changeRange(doc, type, id, startWeek, endWeek, moveChildren = false) {
   const next = structuredClone(doc), key = COLLECTIONS[type];
   const old = next[key].find(x => x.id === id);
+  if (type === 'task') {
+    const schedule = taskSprintSchedule(next, old, startWeek, endWeek);
+    return changeTaskDates(next, id, schedule.start, schedule.end);
+  }
   next[key] = next[key].map(x => x.id === id ? { ...x, startWeek, endWeek } : x);
   if (type !== 'task' && moveChildren && old.startWeek && startWeek) {
     const delta = Math.round((date(startWeek) - date(old.startWeek)) / (7 * DAY));
-    for (const child of descendants(next, type, id)) next[COLLECTIONS[child.type]] = next[COLLECTIONS[child.type]].map(x => x.id === child.item.id ? shift(x, delta) : x);
+    for (const child of descendants(doc, type, id)) next[COLLECTIONS[child.type]] = next[COLLECTIONS[child.type]].map(x => x.id === child.item.id ? shiftChild(doc, child, delta) : x);
   }
   return validateDocument(next);
 }

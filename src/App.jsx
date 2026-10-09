@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, ChevronDown, ChevronRight, ChevronLeft, ChevronsDownUp, ChevronsUpDown, Download, Upload, Search, GripVertical, Pencil, X, Undo2, Redo2, CalendarDays, Layers3, Check, Circle, Clock3, FileSpreadsheet, ArrowUpRight, Trash2, MoveHorizontal, AlertCircle, CheckCircle2 } from 'lucide-react';
 import seed from './initial-data.json';
 import LayerDialog from './LayerDialog.jsx';
-import { TYPES, TITLES, PARENT_KEYS, children, parentOf, allowedWeeks, migrateDocument, STATUS_LABELS, STATUSES, addDays, date, sprintWeeks, itemStats, workDays, validateDocument, reparent, changeRange, removeItem } from './model.js';
+import { TYPES, TITLES, PARENT_KEYS, children, parentOf, allowedWeeks, taskDateRange, dragTaskSchedule, changeTaskDates, migrateDocument, STATUS_LABELS, STATUSES, addDays, date, sprintWeeks, itemStats, workDays, validateDocument, reparent, changeRange, removeItem } from './model.js';
 import { readImport, downloadWorkbook } from './io.js';
 
 const STORAGE = 'chat-gantt.workspace.v2';
@@ -87,6 +87,7 @@ export default function App() {
   }
   function rowRange(row, item = row.item) {
     if (row.type === 'phase') return { start: item.start, end: item.end };
+    if (row.type === 'task') return taskDateRange(doc, item);
     return item.startWeek ? { start: item.startWeek < row.phase.start ? row.phase.start : item.startWeek, end: addDays(item.endWeek, 4) > row.phase.end ? row.phase.end : addDays(item.endWeek, 4) } : null;
   }
   function geometry(range) {
@@ -106,6 +107,11 @@ export default function App() {
   }
   function moveBar(e) {
     const d = barDrag.current; if (!d) return;
+    if (d.row.type === 'task') {
+      if (Math.abs(e.clientX - d.x) > 5) d.moved = true;
+      const schedule = dragTaskSchedule(doc, d.row.item, d.mode, Math.round((e.clientX - d.x) / (zoom / 5)));
+      d.taskSchedule = schedule; setPreview({ id: d.row.item.id, ...schedule }); return;
+    }
     let delta = Math.round((e.clientX - d.x) / zoom);
     if (Math.abs(e.clientX - d.x) > 5) d.moved = true;
     const min = d.allowed[0]?.start, max = d.allowed.at(-1)?.start; if (!min || !max) return;
@@ -120,7 +126,7 @@ export default function App() {
   function endBar() {
     const d = barDrag.current; if (!d) return; barDrag.current = null; setPreview(null);
     if (!d.moved) { if (d.mode === 'move') edit(d.row); return; }
-    try { commit(changeRange(doc, d.row.type, d.row.item.id, d.nextStart, d.nextEnd, d.mode === 'move'), 'Sprint schedule updated.'); } catch (e) { notify(e.message, true); }
+    try { commit(d.row.type === 'task' ? changeTaskDates(doc, d.row.item.id, d.taskSchedule.start, d.taskSchedule.end) : changeRange(doc, d.row.type, d.row.item.id, d.nextStart, d.nextEnd, d.mode === 'move'), 'Schedule updated.'); } catch (e) { notify(e.message, true); }
   }
   async function exportFile() { setExporting(true); try { await downloadWorkbook(doc); notify('WBS exported with the current hierarchy, schedule and statuses.'); } catch (e) { notify(e.message, true); } finally { setExporting(false); } }
   const timelineWidth = weeks.length * zoom;
@@ -158,8 +164,8 @@ export default function App() {
       <footer className="chart-footer"><div className="phase-legend">{doc.phases.map(p => <span key={p.id} title={p.name}><i style={{ background: p.color }}/>{p.name.split(' · ')[0].split(' - ')[0]}</span>)}</div><span className="interaction-hint"><GripVertical size={13}/>Drag handles to change parent <span>·</span> Drag bars to schedule</span></footer>
     </section>
     <div className="below-chart"><span>Completion excludes canceled tasks. Epics, deliverables and phases update automatically.</span><span>{weeks.length} weekly sprints <span>·</span> Weekends excluded</span></div>
-    {dialog?.import && <ImportDialog currentCount={doc.tasks.length} onClose={() => setDialog(null)} onImport={next => { commit(next, 'WBS imported.'); setCollapsed(new Set()); firstScroll.current = false; }}/>} 
-    {dialog && !dialog.import && <LayerDialog Modal={Modal} IconButton={IconButton} fmt={fmt} today={today} doc={doc} config={dialog} onClose={() => setDialog(null)} onSave={commit} onDelete={(type, id) => commit(removeItem(doc, type, id), 'Layer deleted. Undo is available.')}/>} 
+    {dialog?.import && <ImportDialog currentCount={doc.tasks.length} onClose={() => setDialog(null)} onImport={next => { commit(next, 'WBS imported.'); setCollapsed(new Set()); firstScroll.current = false; }}/>}
+    {dialog && !dialog.import && <LayerDialog Modal={Modal} IconButton={IconButton} fmt={fmt} today={today} doc={doc} config={dialog} onClose={() => setDialog(null)} onSave={commit} onDelete={(type, id) => commit(removeItem(doc, type, id), 'Layer deleted. Undo is available.')}/>}
     {toast && <div className={`toast ${toast.bad ? 'error' : ''}`} role={toast.bad ? 'alert' : 'status'}>{toast.bad ? <AlertCircle size={18}/> : <CheckCircle2 size={18}/>}<span>{toast.message}</span><button aria-label="Dismiss notification" onClick={() => setToast(null)}><X size={15}/></button></div>}
   </main>;
 }
