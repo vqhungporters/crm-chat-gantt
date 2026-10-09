@@ -49,3 +49,5 @@ The Vite base path is `/crm-chat-gantt/`. Local development and preview also use
 In the repository's **Settings → Pages → Build and deployment**, choose **GitHub Actions** as the source. Commit and push the configuration to `main`. The workflow in `.github/workflows/deploy.yml` installs dependencies with `npm ci`, builds the app and publishes `dist`. It can also be triggered manually through the Actions tab.
 
 After a successful deployment, the app is available at https://vqhungporters.github.io/crm-chat-gantt/ . GitHub Pages serves the app; each browser continues to store its own WBS locally.
+
+The deployment verifies the built asset paths with `npm run verify:pages` and checks that Pages uses GitHub Actions. Keep Pages Source set to GitHub Actions. Branch publishing or a separate Static HTML workflow can publish the root source `index.html` instead of the Vite build and cause `/src/main.jsx` 404 errors. If an older branch deployment is already running, let it finish before rerunning this deployment workflow.
