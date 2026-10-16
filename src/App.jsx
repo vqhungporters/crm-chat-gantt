@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Plus, ChevronDown, ChevronRight, ChevronLeft, ChevronsDownUp, ChevronsUpDown, Download, Upload, Search, GripVertical, Pencil, X, Undo2, Redo2, CalendarDays, Layers3, Check, Circle, Clock3, FileSpreadsheet, ArrowUpRight, Trash2, MoveHorizontal, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Plus, ChevronDown, ChevronRight, ChevronLeft, Download, Upload, Search, GripVertical, Pencil, X, Undo2, Redo2, CalendarDays, Layers3, Check, Circle, Clock3, FileSpreadsheet, ArrowUpRight, Trash2, MoveHorizontal, AlertCircle, CheckCircle2 } from 'lucide-react';
 import seed from './initial-data.json';
 import LayerDialog from './LayerDialog.jsx';
-import { TYPES, TITLES, PARENT_KEYS, children, parentOf, allowedWeeks, taskDateRange, dragTaskSchedule, changeTaskDates, migrateDocument, STATUS_LABELS, STATUSES, addDays, date, sprintWeeks, itemStats, workDays, validateDocument, reparent, changeRange, removeItem } from './model.js';
+import { TYPES, COLLECTIONS, TITLES, PARENT_KEYS, children, parentOf, allowedWeeks, taskDateRange, dragTaskSchedule, changeTaskDates, migrateDocument, STATUS_LABELS, STATUSES, addDays, date, sprintWeeks, itemStats, workDays, validateDocument, reparent, changeRange, removeItem } from './model.js';
 import { readImport, downloadWorkbook } from './io.js';
 
 const STORAGE = 'chat-gantt.workspace.v2';
@@ -38,6 +38,7 @@ export default function App() {
   const [history, setHistory] = useState(() => ({ doc: load(), past: [], future: [] }));
   const doc = history.doc;
   const [collapsed, setCollapsed] = useState(() => new Set(['P0', 'D1.1']));
+  const [expandedLevel, setExpandedLevel] = useState(null);
   const [query, setQuery] = useState(''), [filter, setFilter] = useState('all'), [zoom, setZoom] = useState(160), [dialog, setDialog] = useState(null);
   const [toast, setToast] = useState(null), [saved, setSaved] = useState(true), [exporting, setExporting] = useState(false), [dragged, setDragged] = useState(null), [dropTarget, setDropTarget] = useState(null), [preview, setPreview] = useState(null);
   const [sideWidth, setSideWidth] = useState(window.innerWidth < 750 ? 340 : 520);
@@ -65,11 +66,15 @@ export default function App() {
       const matches = type === 'task' ? (!q || selfMatch) && (filter === 'all' || item.status === filter) : filter === 'all' && selfMatch;
       if (activeFilter && !matches && !childRows.length) return [];
       const row = { type, item, phase, level: TYPES.indexOf(type) + 1 };
-      return [row, ...(!activeFilter && collapsed.has(item.id) ? [] : childRows)];
+      return [row, ...((expandedLevel && row.level >= expandedLevel) || (!activeFilter && collapsed.has(item.id)) ? [] : childRows)];
     }
     return doc.phases.flatMap(phase => visit('phase', phase, phase));
-  }, [doc, collapsed, query, filter]);
-  function toggle(id) { setCollapsed(old => { const next = new Set(old); next.has(id) ? next.delete(id) : next.add(id); return next; }); }
+  }, [doc, collapsed, query, filter, expandedLevel]);
+  function expandToLevel(level) {
+    setExpandedLevel(level);
+    setCollapsed(new Set(TYPES.slice(level - 1, 3).flatMap(type => doc[COLLECTIONS[type]].map(item => item.id))));
+  }
+  function toggle(id) { setExpandedLevel(null); setCollapsed(old => { const next = new Set(old); next.has(id) ? next.delete(id) : next.add(id); return next; }); }
   function edit(row) { setDialog({ type: row.type, item: row.item }); }
   function addChild(row) {
     const config = { type: TYPES[TYPES.indexOf(row.type) + 1] };
@@ -134,7 +139,7 @@ export default function App() {
     <header className="page-header"><div><div className="breadcrumb"><span className="workspace-symbol"><Layers3 size={16}/></span>PROJECT WORKSPACE<ChevronRight size={12}/>GANTT CHART</div><h1>{doc.title || 'Project schedule'}</h1><p>{doc.phases.length} phases <span>·</span> {doc.deliverables.length} deliverables <span>·</span> {doc.epics.length} epics <span>·</span> {doc.tasks.length} tasks <span className="summary-divider"/> <span className="done-summary"><CheckCircle2 size={14}/>{done} completed</span></p></div><div className="header-actions"><span className={`save-label ${saved ? '' : 'warning'}`}><span/>{saved ? 'Saved locally' : 'Local saving unavailable'}</span><button className="secondary-button" onClick={() => setDialog({ import: true })}><Upload size={16}/>Import WBS</button><button className="secondary-button" disabled={exporting} onClick={exportFile}><Download size={16}/>{exporting ? 'Exporting…' : 'Export'}</button><button className="primary-button" onClick={() => setDialog({ type: 'phase' })}><Plus size={17}/>Add layer</button></div></header>
     <section className="chart-card" aria-label="Interactive Gantt chart">
       <div className="chart-topbar"><div className="view-label"><span><MoveHorizontal size={18}/></span>Project timeline</div><div className="chart-filters"><div className="search-box"><Search size={16}/><input aria-label="Search phases and tasks" placeholder="Search phases and tasks…" value={query} onChange={e => setQuery(e.target.value)}/>{query && <button aria-label="Clear search" onClick={() => setQuery('')}><X size={14}/></button>}</div><select aria-label="Filter by status" value={filter} onChange={e => setFilter(e.target.value)}><option value="all">All statuses</option>{STATUSES.map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}</select></div></div>
-      <div className="chart-toolbar"><div className="toolbar-section"><button className="toolbar-button" onClick={() => setCollapsed(new Set([...doc.phases, ...doc.deliverables, ...doc.epics].map(x => x.id)))}><ChevronsDownUp size={15}/>Collapse all</button><button className="toolbar-button" onClick={() => setCollapsed(new Set())}><ChevronsUpDown size={15}/>Expand all</button><span className="toolbar-divider"/><IconButton icon={Undo2} label="Undo (Ctrl+Z)" disabled={!history.past.length} onClick={undo}/><IconButton icon={Redo2} label="Redo (Ctrl+Shift+Z)" disabled={!history.future.length} onClick={redo}/></div><div className="toolbar-section"><span className="sprint-caption"><CalendarDays size={14}/>1 sprint = 5 weekdays</span><select aria-label="Timeline zoom" value={zoom} onChange={e => setZoom(Number(e.target.value))}><option value={112}>Compact</option><option value={160}>Comfortable</option><option value={220}>Detailed</option></select><select aria-label="Jump to sprint" value={selectedWeek || focusWeek?.start || ''} onChange={e => jump(e.target.value)}>{weeks.map(w => <option key={w.start} value={w.start}>Sprint {w.index} · {fmt(w.start)}</option>)}</select></div></div>
+      <div className="chart-toolbar"><div className="toolbar-section"><div className="layer-depth-controls" role="group" aria-label="Expand to layer">{[1, 2, 3, 4].map(level => <button key={level} type="button" className={`toolbar-button layer-depth-button ${expandedLevel === level ? 'active' : ''}`} aria-pressed={expandedLevel === level} title={`Show layers 1–${level}`} onClick={() => expandToLevel(level)}>L{level}</button>)}</div><span className="toolbar-divider"/><IconButton icon={Undo2} label="Undo (Ctrl+Z)" disabled={!history.past.length} onClick={undo}/><IconButton icon={Redo2} label="Redo (Ctrl+Shift+Z)" disabled={!history.future.length} onClick={redo}/></div><div className="toolbar-section"><span className="sprint-caption"><CalendarDays size={14}/>1 sprint = 5 weekdays</span><select aria-label="Timeline zoom" value={zoom} onChange={e => setZoom(Number(e.target.value))}><option value={112}>Compact</option><option value={160}>Comfortable</option><option value={220}>Detailed</option></select><select aria-label="Jump to sprint" value={selectedWeek || focusWeek?.start || ''} onChange={e => jump(e.target.value)}>{weeks.map(w => <option key={w.start} value={w.start}>Sprint {w.index} · {fmt(w.start)}</option>)}</select></div></div>
       <div ref={scroll} className="gantt-scroll" style={{ '--side-width': `${sideWidth}px`, '--week-width': `${zoom}px`, '--day-width': `${zoom / 5}px` }}>
         <div className="gantt-header" style={{ width: sideWidth + timelineWidth }}><div className="header-left row-left" style={{ width: sideWidth }}><span>Work breakdown</span><span>Status</span><span>Days</span></div><div className="timeline-head" style={{ width: timelineWidth }}>{weeks.map(w => <div className={`week-heading ${focusWeek?.start === w.start ? 'focus-week' : ''}`} key={w.start} style={{ width: zoom }}><div className="week-caption"><strong>Sprint {w.index}</strong><span>{fmt(w.start)} – {fmt(w.end)}</span></div><div className="day-headings">{['M','T','W','T','F'].map((day, i) => <span key={i} title={fmt(addDays(w.start, i), { weekday: 'long', day: 'numeric', month: 'long' })}>{day}<small>{date(addDays(w.start, i)).getUTCDate()}</small></span>)}</div></div>)}</div></div>
         {visible.map(row => {
@@ -164,7 +169,7 @@ export default function App() {
       <footer className="chart-footer"><div className="phase-legend">{doc.phases.map(p => <span key={p.id} title={p.name}><i style={{ background: p.color }}/>{p.name.split(' · ')[0].split(' - ')[0]}</span>)}</div><span className="interaction-hint"><GripVertical size={13}/>Drag handles to change parent <span>·</span> Drag bars to schedule</span></footer>
     </section>
     <div className="below-chart"><span>Completion excludes canceled tasks. Epics, deliverables and phases update automatically.</span><span>{weeks.length} weekly sprints <span>·</span> Weekends excluded</span></div>
-    {dialog?.import && <ImportDialog currentCount={doc.tasks.length} onClose={() => setDialog(null)} onImport={next => { commit(next, 'WBS imported.'); setCollapsed(new Set()); firstScroll.current = false; }}/>}
+    {dialog?.import && <ImportDialog currentCount={doc.tasks.length} onClose={() => setDialog(null)} onImport={next => { commit(next, 'WBS imported.'); setCollapsed(new Set()); setExpandedLevel(4); firstScroll.current = false; }}/>}
     {dialog && !dialog.import && <LayerDialog Modal={Modal} IconButton={IconButton} fmt={fmt} today={today} doc={doc} config={dialog} onClose={() => setDialog(null)} onSave={commit} onDelete={(type, id) => commit(removeItem(doc, type, id), 'Layer deleted. Undo is available.')}/>}
     {toast && <div className={`toast ${toast.bad ? 'error' : ''}`} role={toast.bad ? 'alert' : 'status'}>{toast.bad ? <AlertCircle size={18}/> : <CheckCircle2 size={18}/>}<span>{toast.message}</span><button aria-label="Dismiss notification" onClick={() => setToast(null)}><X size={15}/></button></div>}
   </main>;

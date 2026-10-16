@@ -101,3 +101,8 @@ h1 { @apply m-0 font-semibold; font-size: clamp(24px, 2.2vw, 32px); letter-spaci
 .layer-3 .task-name { font-weight: 500; }
 .gantt-bar.task .bar-handle { width: min(7px, 25%); }
 .gantt-bar.task .bar-handle::after { left: calc(50% - 1px); }
+.gantt-bar.deliverable, .gantt-bar.epic, .gantt-bar.task { color: #000; }
+
+.layer-depth-controls { display: flex; gap: 3px; }
+.layer-depth-button { min-width: 34px; justify-content: center; font-weight: 600; }
+.layer-depth-button.active { background: #eee9fc; color: #7150c2; box-shadow: inset 0 0 0 1px #d8cbf2; }
